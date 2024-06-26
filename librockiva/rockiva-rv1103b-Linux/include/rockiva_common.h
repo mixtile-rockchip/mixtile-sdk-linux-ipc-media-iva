@@ -163,7 +163,8 @@ typedef enum {
     ROCKIVA_DET_MODEL_PHCN,           /* 检测类别：人形、头肩、机动车、非机动车 */
     ROCKIVA_DET_MODEL_CLS8,           /* 检测类别：人形、人脸、机动车、车牌、非机动车、宠物、人头 */
     ROCKIVA_DET_MODEL_PFP_V3,         /* 检测类别：人形、人脸、宠物 */
-    ROCKIVA_DET_MODEL_PFCPP           /* 检测类别：人形、人脸、车辆、宠物、快递包裹 */
+    ROCKIVA_DET_MODEL_PFCPP,          /* 检测类别：人形、人脸、车辆、宠物、快递包裹 */
+    ROCKIVA_DET_MODEL_PVN,            /* 检测类别：人形、车辆、非机动车 */
 } RockIvaDetModel;
 
 /* 工作模式 */
