@@ -165,6 +165,7 @@ typedef enum {
     ROCKIVA_DET_MODEL_PFP_V3,         /* 检测类别：人形、人脸、宠物 */
     ROCKIVA_DET_MODEL_PFCPP,          /* 检测类别：人形、人脸、车辆、宠物、快递包裹 */
     ROCKIVA_DET_MODEL_PVN,            /* 检测类别：人形、车辆、非机动车 */
+    ROCKIVA_DET_MODEL_CLS9,           /* 检测类别：人形、人脸、机动车、车牌、非机动车、宠物、人头、包裹 */
 } RockIvaDetModel;
 
 /* 工作模式 */
@@ -172,7 +173,12 @@ typedef enum {
     ROCKIVA_MODE_VIDEO   = 0,              /* 视频流模式(使能跟踪) */
     ROCKIVA_MODE_PICTURE = 1,              /* 图片模式(不使能跟踪) */
 } RockIvaWorkMode;
- 
+
+typedef enum {
+    ROCKIVA_MODULE_SET_STATE_RESUME = 0,  /* 算法模块恢复运行 */
+    ROCKIVA_MODULE_SET_STATE_PAUSE = 1,   /* 算法模块暂停运行 */
+} RockIvaModuleSetState;
+
 typedef enum {
     ROCKIVA_CAMERA_TYPE_ONE = 0,           /* 单摄 */
     ROCKIVA_CAMERA_TYPE_DUAL = 1,          /* 双摄，能够提供RGB和IR两路图像 */
@@ -266,6 +272,8 @@ typedef struct {
 typedef struct {
     uint16_t width;                      /* 图像宽度 */
     uint16_t height;                     /* 图像高度 */
+    uint16_t wstride;                    /* 图像宽度对齐 */
+    uint16_t hstride;                    /* 图像高度对齐 */
     RockIvaImageFormat format;           /* 图像格式 */
     RockIvaImageTransform transformMode; /* 旋转模式 */
 } RockIvaImageInfo;
@@ -315,8 +323,20 @@ typedef struct {
      * @param inputImg [in] 输入图像
      * @param outputImg [out] 编码后图像(注意,outputImg.dataAddr需要外部自己申请和释放内存,
      *                        当内部对该图像内存不再使用将会在抓拍回调函数ROCKIVA_FrameReleaseCallback上报)
+     * @param userdata [in] 用户自定义数据指针
+     * @param tag [in] 标记用于区分算法模块（当前值有: "face", "plate"）
      */
-    int (*ROCKIVA_Yuv2Jpeg)(RockIvaImage *inputImg, RockIvaImage *outputImg, void *userdata);
+    int (*ROCKIVA_Yuv2Jpeg)(RockIvaImage *inputImg, RockIvaImage *outputImg, void *userdata, char* tag);
+    /**
+     * @brief 将图像编码为JPEG图像
+     * @param inputImg [in] 输入图像
+     * @param rect [in] 裁剪区域用于编码，如果为NULL则不裁剪，注意坐标为万分比，外面需要自己转换和对齐
+     * @param outputImg [out] 编码后图像(注意,outputImg.dataAddr需要外部自己申请和释放内存,
+     *                        当内部对该图像内存不再使用将会在抓拍回调函数ROCKIVA_FrameReleaseCallback上报)
+     * @param userdata [in] 用户自定义数据指针
+     * @param tag [in] 标记用于区分算法模块（当前值有: "face", "plate"）
+     */
+    int (*ROCKIVA_Yuv2JpegWithRect)(RockIvaImage *inputImg, RockIvaRectangle *rect, RockIvaImage *outputImg, void *userdata, char* tag);
  } RockIvaMediaOps;
 
 /* SDK通用配置 */
@@ -333,6 +353,7 @@ typedef struct {
     RockIvaDetModel detModel;            /* 指定前级目标检测算法模型 */
     uint32_t detClasses;                 /* 需要的一些特殊检测类别，如婴儿检测：ROCKIVA_OBJECT_TYPE_BITMASK(ROCKIVA_OBJECT_TYPE_BABY) */
     RockIvaMemInfo detModelData;         /* 指定检测模型数据（用于快启直接配置模型内存数据直接用于加载） */
+    const char* detModelName;            /* 指定检测模型名字 */
     uint8_t trackerVersion;              /* 指定跟踪算法版本 0:默认v2; 1:v1; 2:v2 */
     RockIvaMediaOps mediaOps;            /* 设置媒体操作 */
     uint8_t newModelInstance;            /* 每个持有的模型重新创建实例，NVR产品需要跑多路时候开启（设为1），内存占用会增加 */
@@ -446,6 +467,20 @@ RockIvaRetCode ROCKIVA_GetVersion(const uint32_t maxLen, char* version);
  * @return RockIvaRetCode 
  */
 RockIvaRetCode ROCKIVA_SetWorkMode(RockIvaHandle handle, RockIvaWorkMode mode);
+
+/**
+ * @brief 设置模块/子模块状态
+ *
+ * @param handle [in] handle
+ * @param module [in] 模块名称，当前支持的模块有："ba", "face", "vehicle", "ts", "hand", "object", "pose"
+ *                    子模块有： 检测: "det.baby"
+ *                             人脸： "face.mask", "face.attribute", "face.recog"
+ *                             车辆车牌："vehicle.attribute", "vehicle.plate_recog",
+ *
+ * @param state [in] 模块状态
+ * @return RockIvaRetCode
+ */
+RockIvaRetCode ROCKIVA_SetModuleState(RockIvaHandle handle, const char* module, RockIvaModuleSetState state);
 
 #ifdef __cplusplus
 }

@@ -37,6 +37,7 @@ extern "C"{
 typedef enum {
     ROCKIVA_FACE_OPT_BEST,                      /* 效果优先模式 目标从出现到消失的最优人脸 */
     ROCKIVA_FACE_OPT_FAST,                      /* 快速优先模式 目标从出现的一个时间段内的最优人脸 */
+    ROCKIVA_FACE_OPT_CYCLE                      /* 识别模式 目标定期抓拍上报直到设置不抓拍 */
 } RockIvaFaceOptType;
 
 /* 多人脸选择顺序 */
@@ -157,6 +158,7 @@ typedef enum {
     ROCKIVA_FACE_CAP_TYPE_TIMEOUT,                    /* 超时抓拍帧 */
     ROCKIVA_FACE_CAP_TYPE_QUALITY,                    /* 满足阈值抓拍 */
     ROCKIVA_FACE_CAP_TYPE_FORENOTICE,                 /* 提前上报人脸分析结果（如口罩佩戴判断等） */
+    ROCKIVA_FACE_CAP_TYPE_CYCLE,                      /* 人脸周期上报 */
     ROCKIVA_FACE_CAP_TYPE_CUSTOM,                     /* 用户指定 */
 } RockIvaFaceCapFrameType;
 
@@ -252,7 +254,8 @@ typedef struct {
     RockIvaCaptureImageConfig captureImageConfig; /* 抓拍上报人脸图像配置 */
     RockIvaFaceOptType optType;                   /* 人脸优选类型 */
     uint32_t optBestNum;                          /* ROCKIVA_FACE_OPT_BEST：人脸优选张数（未实现） 范围：1-3 */
-    uint32_t optBestOverTime;                     /* 人脸质量最优抓拍超时时间设置ms，若人脸在此时段内未消失则上报此时段内的质量最优人脸；若为0，则在消失后才上报质量最优人脸 */
+    uint32_t optBestOverTime;                     /* 人脸抓拍超时时间设置ms，若人脸在此时段内未消失则上报此时段内的质量最优人脸；若为0，则在消失后才上报质量最优人脸 */
+    uint32_t optCycleTime;                        /* 人脸周期抓拍间隔时间ms */
     uint32_t faceQualityThrehold;                 /* 快速抓拍时满足抓拍的人脸质量分阈值 */
     uint8_t captureWithMask;                      /* 支持抓拍戴口罩的人脸并上报人脸是否佩戴口罩[0：关；1：开；2：开且口罩提前上报(满足qualityConfig配置)]，若打开则qualityConfig的minMouthScore和minNoseScore过滤失效 */
     uint8_t faceIouThreshold;                     /* 多摄模式下RGB和IR图像中人脸需要满足的IOU阈值，百分比范围[0, 100]，默认0为50% */
