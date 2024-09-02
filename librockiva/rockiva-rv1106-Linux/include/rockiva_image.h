@@ -111,6 +111,14 @@ RockIvaRetCode ROCKIVA_IMAGE_Write(const char* path, const RockIvaImage* image);
  */
 RockIvaRetCode ROCKIVA_IMAGE_Read(const char* path, RockIvaImage* image);
 
+/**
+ * @brief 刷cache到设备内存
+ * 
+ * @param image [IN] 图像
+ * @return RockIvaRetCode 
+ */
+RockIvaRetCode ROCKIVA_IMAGE_SyncMem(RockIvaImage* image);
+
 #ifdef  __cplusplus
 }
 #endif /* end of __cplusplus */

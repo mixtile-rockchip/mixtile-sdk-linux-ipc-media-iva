@@ -165,6 +165,8 @@ typedef enum {
     ROCKIVA_DET_MODEL_PFP_V3,         /* 检测类别：人形、人脸、宠物 */
     ROCKIVA_DET_MODEL_PFCPP,          /* 检测类别：人形、人脸、车辆、宠物、快递包裹 */
     ROCKIVA_DET_MODEL_PVN,            /* 检测类别：人形、车辆、非机动车 */
+    ROCKIVA_DET_MODEL_CLS9,           /* 检测类别：人形、人脸、机动车、车牌、非机动车、宠物、人头、快递包裹 */
+    ROCKIVA_DET_MODEL_PV              /* 检测类别：人形、车辆 */
 } RockIvaDetModel;
 
 /* 工作模式 */
@@ -177,6 +179,7 @@ typedef enum {
     ROCKIVA_CAMERA_TYPE_ONE = 0,           /* 单摄 */
     ROCKIVA_CAMERA_TYPE_DUAL = 1,          /* 双摄，能够提供RGB和IR两路图像 */
     ROCKIVA_CAMERA_TYPE_SL = 2,            /* 结构光摄像头，能够提供RGB、IR和Depth三路图像 */
+    ROCKIVA_CAMERA_TYPE_VIDEO_STITCHING = 3,   /* 双目视频拼接 */
 } RockIvaCameraType;
 
 /********************************************************************/
@@ -266,6 +269,8 @@ typedef struct {
 typedef struct {
     uint16_t width;                      /* 图像宽度 */
     uint16_t height;                     /* 图像高度 */
+    uint16_t wstride;                    /* 图像宽度对齐 */
+    uint16_t hstride;                    /* 图像高度对齐 */
     RockIvaImageFormat format;           /* 图像格式 */
     RockIvaImageTransform transformMode; /* 旋转模式 */
 } RockIvaImageInfo;
