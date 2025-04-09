@@ -299,6 +299,9 @@ typedef struct {
     uint32_t clsScore;         /* 目标分类分数，仅开启分类模型有效 [1-100] */
     RockIvaRectangle rect;     /* 目标区域框 (万分比) */
     RockIvaObjectType type;    /* 目标类别 */
+    unsigned long timestamp;   /* 目标检测时间戳 */
+    int frameCount;            /* 目标被检测帧数 */
+    RockIvaObjectState state;  /* 目标状态 */
 } RockIvaObjectInfo;
 
 /* 目标检测结果 */
@@ -306,6 +309,7 @@ typedef struct {
     uint32_t frameId;                               /* 帧ID */
     RockIvaImage frame;                             /* 对应的输入图像帧 */
     uint32_t channelId;                             /* 帧通道号 */
+    RockIvaSize imageSize;                          /* 图像宽高 */
     uint32_t objNum;                                /* 目标个数 */
     RockIvaObjectInfo objInfo[ROCKIVA_MAX_OBJ_NUM]; /* 各目标检测信息 */
 } RockIvaDetectResult;
@@ -358,6 +362,8 @@ typedef struct {
     uint8_t trackerVersion;              /* 指定跟踪算法版本 0:默认v2; 1:v1; 2:v2 */
     RockIvaMediaOps mediaOps;            /* 设置媒体操作 */
     uint8_t newModelInstance;            /* 每个持有的模型重新创建实例，NVR产品需要跑多路时候开启（设为1），内存占用会增加 */
+    uint8_t maxDetNum;                   /* 限制目标检测的最大检测目标个数，可以降低一些内存，默认0为ROCKIVA_MAX_OBJ_NUM */
+    uint32_t detObjectType;              /* 指定目标检测模块的过滤检测类型，可以降低一些内存，默认0为不过滤，例如：ROCKIVA_OBJECT_TYPE_BITMASK(ROCKIVA_OBJECT_TYPE_PERSON) */
 } RockIvaInitParam;
 
 /* 推帧提供的额外信息 */
