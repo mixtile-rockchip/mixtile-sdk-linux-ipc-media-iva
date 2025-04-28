@@ -368,6 +368,7 @@ typedef struct {
 
 /* 推帧提供的额外信息 */
 typedef struct {
+    RockIvaRectangle roiCrop;            /* 原图裁剪区域(像素坐标) */
     RockIvaAreas roiAreas;               /* 有效区域（该参数优先级高于RockIvaInitParam.roiArea） */
     RockIvaObjectInfo objInfo;           /* 需要处理的目标信息（可以直接用于识别分析不用再做目标检测） */
     RockIvaParams moduleParams;          /* 模块自定义参数 */
