@@ -137,6 +137,17 @@ typedef enum {
     ROCKIVA_OBJECT_TYPE_PLATE = 9,          /* 车牌 */
     ROCKIVA_OBJECT_TYPE_BABY = 10,          /* 婴幼儿 */
     ROCKIVA_OBJECT_TYPE_PACKAGE = 11,       /* 快递包裹 */
+    ROCKIVA_OBJECT_TYPE_BIRD = 12,          /* 鸟 */
+    ROCKIVA_OBJECT_TYPE_CAT = 13,           /* 猫 */
+    ROCKIVA_OBJECT_TYPE_DOG = 14,           /* 狗 */
+    ROCKIVA_OBJECT_TYPE_HORSE = 15,         /* 马 */
+    ROCKIVA_OBJECT_TYPE_SHEEP = 16,         /* 羊 */
+    ROCKIVA_OBJECT_TYPE_COW = 17,           /* 牛 */
+    ROCKIVA_OBJECT_TYPE_DEER = 18,          /* 鹿 */
+    ROCKIVA_OBJECT_TYPE_SQUIRREL = 19,          /* 松鼠 */
+    ROCKIVA_OBJECT_TYPE_MOTORCYCLE_HEAD = 20,   /* 电瓶车车头 */
+    ROCKIVA_OBJECT_TYPE_MOTORCYCLE_TAIL = 21,   /* 电瓶车车尾 */
+    ROCKIVA_OBJECT_TYPE_MOTORCYCLE_BODY = 22,   /* 电瓶车车身 */
     ROCKIVA_OBJECT_TYPE_MAX
 } RockIvaObjectType;
 
@@ -167,6 +178,8 @@ typedef enum {
     ROCKIVA_DET_MODEL_PVN,            /* 检测类别：人形、车辆、非机动车 */
     ROCKIVA_DET_MODEL_CLS9,           /* 检测类别：人形、人脸、机动车、车牌、非机动车、宠物、人头、包裹 */
     ROCKIVA_DET_MODEL_PV,             /* 检测类别：人形、车辆 */
+    ROCKIVA_DET_MODEL_ANIMAL,         /* 检测类别：鸟、猫、狗、马、羊、牛、鹿 */
+    ROCKIVA_DET_MODEL_MHTB,           /* 检测类别：电瓶车车头、车尾、车身 */
 } RockIvaDetModel;
 
 /* 工作模式 */
