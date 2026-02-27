@@ -8,10 +8,18 @@ else()
 set (TARGET_LIB_ARCH lib)
 endif()
 
+get_filename_component(TOOLCHAIN_PRFIX "${CMAKE_C_COMPILER}" NAME)
+string(REGEX REPLACE "-?(gcc|clang|cc|g\\+\\+|c\\+\\+)$" "" TOOLCHAIN_PRFIX "${TOOLCHAIN_PRFIX}")
+set(TOOLCHAIN_PRFIX "${TOOLCHAIN_PRFIX}")
+
 set(ROCKIVA_LIB_DIR librockiva/rockiva-${TARGET_SOC}-Linux)
 set(ROCKIVA_DATA_DIR models/rockiva_data_${TARGET_SOC})
 
 install(DIRECTORY ${ROCKIVA_LIB_DIR}/include/ DESTINATION include/rockiva)
+if(TOOLCHAIN_PRFIX MATCHES "-musl")
+install(DIRECTORY ${ROCKIVA_LIB_DIR}/${TOOLCHAIN_PRFIX}/ DESTINATION lib)
+else()
 install(DIRECTORY ${ROCKIVA_LIB_DIR}/${TARGET_LIB_ARCH}/ DESTINATION lib)
+endif()
 
 install(DIRECTORY ${ROCKIVA_DATA_DIR}/ DESTINATION lib)
